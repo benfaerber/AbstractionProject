@@ -15,19 +15,77 @@ class AbstractionViewController: UIPageViewController, UIPageViewControllerDataS
             self.newAbstractionViewController(abstractionLevel: "Block"),
             self.newAbstractionViewController(abstractionLevel: "Swift"),
             self.newAbstractionViewController(abstractionLevel: "ByteCode"),
-            self.newAbstractionViewController(abstractionLevel: "Swift"),
-            self.newAbstractionViewController(abstractionLevel: "Swift"),
-            self.newAbstractionViewController(abstractionLevel: "Swift"),
+            self.newAbstractionViewController(abstractionLevel: "Binary"),
+            self.newAbstractionViewController(abstractionLevel: "LogicalGate")
         ]
+    }
+    
+    private func newAbstractionViewController(abstractionLevel: String) -> UIViewController
+    {
+        return UIStoryboard(name: "Main", bundle: nil).instantiateInitialViewController(withIdentifier: "\(abstractionLevel)ViewController")
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        dataSource = self
 
-        // Do any additional setup after loading the view.
+        if let firstViewController = orderedAbstactionViews.first
+        {
+            setViewController([firstViewController],
+                              direction: .forward,
+                              animated: true,
+                              completion: nil)
+        }
     }
     
-
+    // Swipe left
+    public func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController?
+    {
+        guard let viewControllerIndex = orderedAbstractionViews.index(of: viewController)
+            else
+        {
+            return nil
+        }
+        
+        let previousIndex = viewControllerIndex - 1
+        
+        guard previousIndex >= 0
+            else
+        {
+            return orderedAbstractionViews.last
+        }
+        
+        guard prderedAbstractionViews.count > previousIndex
+            else
+        {
+            return nil
+        }
+        
+        return orderedAbstractionViews[previousIndex]
+    }
+    
+    // Swipe right
+    public func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController?
+    {
+        guard let viewControllerIndex = orderedAbstractionViews.index(of: viewController)
+            else
+        {
+            return nil
+        }
+        
+        let nextIndex = viewControllerIndex + 1
+        
+        guard nextIndex >= 0
+            else
+        {
+            return orderedAbstractionViews.first
+        }
+        
+        return orderedAbstractionViews[nextIndex]
+    }
+    
+    
+    
     /*
     // MARK: - Navigation
 
