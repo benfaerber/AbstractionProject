@@ -18,20 +18,20 @@ class AbstractionViewController: UIPageViewController, UIPageViewControllerDataS
             self.newAbstractionViewController(abstractionLevel: "Binary"),
             self.newAbstractionViewController(abstractionLevel: "LogicalGate")
         ]
-    }
+    }()
     
     private func newAbstractionViewController(abstractionLevel: String) -> UIViewController
     {
-        return UIStoryboard(name: "Main", bundle: nil).instantiateInitialViewController(withIdentifier: "\(abstractionLevel)ViewController")
+        return UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "\(abstractionLevel)ViewController")
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         dataSource = self
 
-        if let firstViewController = orderedAbstactionViews.first
+        if let firstViewController = orderedAbstractionViews.first
         {
-            setViewController([firstViewController],
+            setViewControllers([firstViewController],
                               direction: .forward,
                               animated: true,
                               completion: nil)
@@ -55,7 +55,7 @@ class AbstractionViewController: UIPageViewController, UIPageViewControllerDataS
             return orderedAbstractionViews.last
         }
         
-        guard prderedAbstractionViews.count > previousIndex
+        guard orderedAbstractionViews.count > previousIndex
             else
         {
             return nil
@@ -78,14 +78,34 @@ class AbstractionViewController: UIPageViewController, UIPageViewControllerDataS
         guard nextIndex >= 0
             else
         {
-            return orderedAbstractionViews.first
+            return nil
+        }
+        
+        guard nextIndex < orderedAbstractionViews.count
+            else
+        {
+                return orderedAbstractionViews.first
         }
         
         return orderedAbstractionViews[nextIndex]
     }
     
+    //Mark:- Support of dots
+    public func presentationCount(for pageViewController: UIPageViewController) -> Int
+    {
+        return orderedAbstractionViews.count
+    }
     
-    
+    public func presentaionIndex(for pageViewController: UIPageViewController) -> Int
+    {
+        guard let firstViewController = viewControllers?.first, let firstViewControllerIndex = orderedAbstractionViews.index(of: firstViewController)
+        else
+        {
+            return 0
+        }
+        
+        return firstViewControllerIndex
+    }
     /*
     // MARK: - Navigation
 
